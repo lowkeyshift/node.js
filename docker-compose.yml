@@ -38,9 +38,8 @@ services:
       - mongo
 
   demo:
-    image: node-app:latest
-    #build:
-    #    context: .
+    build:
+        context: .
     ports:
       - "3000:3000"
     container_name: demo-app
