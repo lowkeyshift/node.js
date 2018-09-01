@@ -21,9 +21,9 @@ var dateFormat = require('dateformat');
 var now = new Date();
 
 const tracer = require('dd-trace').init({ service: 'node-express', // shows up as Service in Datadog UI
+                                        source: 'yelp-app',
                                         hostname: 'agent', // references the `agent` service in docker-compose.yml
                                         env: 'staging',
-                                        sampleRate: 1,
                                         debug: true}) // useful for seeing request/response and any logs
 
 
