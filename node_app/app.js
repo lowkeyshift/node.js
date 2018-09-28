@@ -1,23 +1,32 @@
 
 // Dependancies
 const express = require('express');
-const bodyParser = require('body-parser');
-
 // create express app
 const app = express();
-var session = require('express-session');
-//const restful = require('node-restful');
-const mongoose = require('mongoose');
-//mongoose = restful.mongoose;
-
-const port = process.env.PORT || 3000;
 const tracer = require('dd-trace').init({ service: 'node-express', // shows up as Service in Datadog UI
                                         hostname: 'agent', // references the `agent` service in docker-compose.yml
                                         env: 'staging',
                                         sampleRate: 1,
                                         debug: true}) // useful for seeing request/response and any logs
+const bodyParser = require('body-parser');
+
+
+const session = require('express-session');
+//const restful = require('node-restful');
+const mongoose = require('mongoose');
+const responseTime = require('response-time');
+const axios = require('axios');
+const redis = require('redis');
+
+
+//mongoose = restful.mongoose;
+
+const port = process.env.PORT || 3000;
+
+tracer.use('express');
+
 // Mongodb
-mongoose.Promise = global.Promise;
+//mongoose.Promise = global.Promise;
 
 // Connecting to the database
 mongoose.connect('mongodb://demo-mongo:27017/Users', { useNewUrlParser: true }).then(() => {
@@ -32,14 +41,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.json({type:'application/vnd.api+json'}));
 
+// create and connect redis client to local instance.
+const client = redis.createClient('redis://demo-redis:6379');
+
+// Print redis errors to the console
+client.on('error', (err) => {
+  console.log("Error " + err);
+});
 // RedisStore
 /***************Redis configuratrion********************/
 // Caching something using Redis
-var RedisStore = require('connect-redis')(session);
+/*var RedisStore = require('connect-redis')(session);
 var confRedis = require('./config/redis.js');
-const redis = require('redis');
-// Redis session
 
+// Redis session
 app.use(session({
   store: new RedisStore(confRedis.session),
   secret: confRedis.secret,
@@ -50,12 +65,14 @@ app.use(session({
     secure: confRedis.secure_cookie,
     maxAge: 3600000 //1 Hour
   }
-}));
-
+}));*/
 
 // simple route
 app.get('/', (req, res) => {
-    res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
+    const span = tracer.startSpan('web.request')
+    res.json({"message": "Welcome to Datadog Note Taking API."});
+    span.setTag('http.url', '/')
+    span.finish()
 });
 
 require('./routes/routes')(app);

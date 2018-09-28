@@ -1,5 +1,9 @@
 module.exports = (app) => {
     const notes = require('../app/controllers/note.controller');
+    const search = require('../app/controllers/search.controller');
+
+    // Retrieve all Notes
+    app.get('/', notes.findAll);
 
     // Create a new Note
     app.post('/notes', notes.create);
@@ -15,4 +19,8 @@ module.exports = (app) => {
 
     // Delete a Note with noteId
     app.delete('/notes/:noteId', notes.delete);
+
+    // Pull Data & Add to Redis
+    app.get('/api/search', search.search);
+
 }

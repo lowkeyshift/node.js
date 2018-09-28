@@ -1,5 +1,4 @@
 var home = require('../app/controllers/home');
-//var home = require('../app/controllers/restaurant');
 
 //you can include all your controllers
 
