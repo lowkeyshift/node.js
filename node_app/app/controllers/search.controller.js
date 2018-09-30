@@ -1,8 +1,9 @@
 const tracer = require('dd-trace').init({ service: 'node-express', // shows up as Service in Datadog UI
                                         hostname: 'agent', // references the `agent` service in docker-compose.yml
                                         env: 'staging',
-                                        sampleRate: 1,
-                                        debug: true}) // useful for seeing request/response and any logs
+                                        plugins: true,
+                                        sampleRate: 1});
+                                        //debug: true}) // useful for seeing request/response and any logs
 const axios = require('axios');
 const redis = require('redis');
 const client = redis.createClient('redis://demo-redis:6379');
@@ -10,10 +11,10 @@ const client = redis.createClient('redis://demo-redis:6379');
 exports.search = (req, res) => {
   // Extract the query from url and trim trailing spaces
   const query = (req.query.query).trim();
-  // Build the Wikipedia API url
   const span = tracer.startSpan('api.wiki.'+query)
-  const searchUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&section=0&page=${query}`;
   span.setTag('api.call', '/api/search', query)
+  // Build the Wikipedia API url
+  const searchUrl = `https://en.wikipedia.org/w/api.php?action=parse&format=json&section=0&page=${query}`;
   // Try fetching the result from Redis first in case we have it cached
   return client.get(`wikipedia:${query}`, (err, result) => {
     // If that key exist in Redis store

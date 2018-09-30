@@ -11,9 +11,10 @@ services:
     environment:
       - DD_API_KEY=1ed1eba742b84b49409e3a8e2885a779
       - DD_LOGS_ENABLED=true
+      - DD_APM_ANALYZED_SPANS=http-client|http.request=1
       - DD_PROCESS_AGENT_ENABLED=true
       - DD_HOSTNAME=node-web-app
-      - DD_LOG_LEVEL=debug
+      - DD_LOG_LEVEL=trace
       - DD_APM_ENABLED=true
       - SD_BACKEND=docker
       - NON_LOCAL_TRAFFIC=false

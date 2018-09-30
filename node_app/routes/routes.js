@@ -3,7 +3,7 @@ module.exports = (app) => {
     const search = require('../app/controllers/search.controller');
 
     // Retrieve all Notes
-    app.get('/', notes.findAll);
+    app.get('/all', notes.findAll);
 
     // Create a new Note
     app.post('/notes', notes.create);
