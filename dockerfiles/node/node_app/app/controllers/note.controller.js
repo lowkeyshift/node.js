@@ -40,13 +40,16 @@ const insertDocuments = function(db, callback) {
     });
 };
 
+const success_call = function() {
+    res.send('Successfully Posted To Database.');
+};
     MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
       assert.equal(null, err);
       const db = client.db(dbName);
       insertDocuments(db, function() {
           client.close();
+          res.send('Successfully Posted To Database.');
         });
-    res.send('Successfully Posted To Database.');
   });
 }
 
