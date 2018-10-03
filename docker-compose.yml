@@ -1,15 +1,59 @@
 version: '3'
 services:
   agent:
-    image: datadog/agent
+    image: datadog/agent:latest
+    container_name: agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/datadog-agent/run:/opt/datadog-agent/run:rw
+      - /proc/mounts:/host/proc/mounts:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
     environment:
-      - DD_API_KEY=<YOUR_DD_API_KEY>
-      - DD_APM_ENABLED=true
+      - DD_API_KEY=1ed1eba742b84b49409e3a8e2885a779
       - DD_LOGS_ENABLED=true
+      - DD_APM_ANALYZED_SPANS=node-express|express.request=1
       - DD_PROCESS_AGENT_ENABLED=true
-      - DD_HOSTNAME=app-web-app
-      - DD_LOG_LEVEL=debug
-  demo:
-    build: .
+      - DD_HOSTNAME=node-web-app
+      - DD_LOG_LEVEL=trace
+      - DD_APM_ENABLED=true
+      - SD_BACKEND=docker
+      - NON_LOCAL_TRAFFIC=false
+      - MAX_TRACES_PER_SECOND=1
+    links:
+        - mongo
+
+  mongo:
+    image: mongo:latest
     ports:
-      - 3000:3000
+      - "27017:27017"
+    hostname: mongo
+    container_name: demo-mongo
+    volumes:
+      - ./data:/data/db
+
+  redis:
+    image: redis:4.0.10
+    ports:
+      - "6379:6379"
+    hostname: redis
+    container_name: demo-redis
+    links:
+        - agent
+
+  demo:
+    build:
+        context: ./dockerfiles/node/
+    restart: always
+    ports:
+      - "3000:3000"
+    container_name: demo-app
+    links:
+      - redis
+
+  scripts:
+    build:
+        context: ./dockerfiles/automation/
+    restart: always
+    container_name: demo-scripts
+    links:
+      - demo
