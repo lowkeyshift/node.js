@@ -27,3 +27,11 @@ https://www.datadoghq.com/
 Additional dependency being used for automatic [MVC framework generation](https://www.npmjs.com/package/express-mvc-generator).
 
 http://0.0.0.0:3000/login & http://0.0.0.0:3000/signup
+
+## NEW DOCS
+
+# Local Testing
+
+1) Run the bash script `./local-test.sh` to create/delete and leverage the redis caching.
+2) The `delete.py` will be called by the `local-test.sh` script.
+3) If you are building this from scratch you will need to restart the demo-app run the `docker restart demo-app`
