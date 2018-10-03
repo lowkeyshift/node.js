@@ -2,7 +2,7 @@ FROM ubuntu:latest
 MAINTAINER edwin.carrasquillo@datadoghq.com
 
 # Install Python3 & Curl
-RUN apt-get update && apt-get install -y python3 curl
+RUN apt-get update && apt-get install -y python3 curl cron
 RUN apt-get install -y python3-pip && pip3 install requests
 
 # Add python script
