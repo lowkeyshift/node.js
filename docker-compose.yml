@@ -42,10 +42,18 @@ services:
 
   demo:
     build:
-        context: .
+        context: ./dockerfiles/node/
     restart: always
     ports:
       - "3000:3000"
     container_name: demo-app
     links:
       - redis
+
+  scripts:
+    build:
+        context: ./dockerfiles/automation/
+    restart: always
+    container_name: demo-scripts
+    links:
+      - demo

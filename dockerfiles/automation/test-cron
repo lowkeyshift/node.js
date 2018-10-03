@@ -1,0 +1,1 @@
+*/15 * * * * ./scripts/curl-script.sh && python3 scripts/delete.py
