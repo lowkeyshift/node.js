@@ -1,6 +1,6 @@
 const tracer = require('dd-trace').init({ service: 'node-express', // shows up as Service in Datadog UI
                                         hostname: 'agent', // references the `agent` service in docker-compose.yml
-                                        env: 'staging',
+                                        env: 'datad0g.com',
                                         plugins: true,
                                         sampleRate: 1});
 // Dependancies

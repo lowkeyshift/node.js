@@ -9,7 +9,7 @@ services:
       - /proc/mounts:/host/proc/mounts:ro
       - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
     environment:
-      - DD_API_KEY=1ed1eba742b84b49409e3a8e2885a779
+      - DD_API_KEY=48ff7da4fc067930996c42ba307d264d
       - DD_LOGS_ENABLED=true
       - DD_APM_ANALYZED_SPANS=node-express|express.request=1
       - DD_PROCESS_AGENT_ENABLED=true
@@ -50,10 +50,10 @@ services:
     links:
       - redis
 
-  scripts:
-    build:
-        context: ./dockerfiles/automation/
-    restart: always
-    container_name: demo-scripts
-    links:
-      - demo
+#  scripts:
+#    build:
+#        context: ./dockerfiles/automation/
+#    restart: always
+#    container_name: demo-scripts
+#    links:
+#      - demo
