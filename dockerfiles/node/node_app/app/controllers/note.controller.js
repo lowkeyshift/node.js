@@ -1,23 +1,6 @@
-const tracer = require('dd-trace').init({ service: 'node-express', // shows up as Service in Datadog UI
-                                        hostname: 'agent', // references the `agent` service in docker-compose.yml
-                                        env: 'staging',
-                                        plugins: true,
-                                        sampleRate: 1});
-
-
 const Note = require('../models/note.model');
-
 // Create and Save a new Note
-var  MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
-
-// Connection URL
-const url = 'mongodb://demo-mongo:27017';
-
-// Database Name
-const dbName = 'Users';
-
-exports.create = (req, res, next) => {
+exports.create = (req, res) => {
     // Validate request
     if(!req.body.content) {
         return res.status(400).send({
@@ -25,34 +8,21 @@ exports.create = (req, res, next) => {
         });
     }
     // Create a Note
-    const noteNew = {
+    const note = new Note({
         title: req.body.title || "Untitled Note",
         content: req.body.content
-    };
-
-const insertDocuments = function(db, callback) {
-    const collection = db.collection('notes');
-    collection.insertOne(noteNew, function(err, result) {
-      assert.equal(null, err);
-      console.log('Note inserted');
-      callback(result);
-      console.log('Closed DB');
     });
-};
 
-const success_call = function() {
-    res.send('Successfully Posted To Database.');
+// Save Note in the database
+note.save()
+.then(data => {
+    res.send(data);
+}).catch(err => {
+    res.status(500).send({
+        message: err.message || "Some error occurred while creating the Note."
+    });
+});
 };
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
-      assert.equal(null, err);
-      const db = client.db(dbName);
-      insertDocuments(db, function() {
-          client.close();
-          res.send('Successfully Posted To Database.');
-        });
-  });
-}
-
 
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
@@ -78,7 +48,7 @@ exports.findOne = (req, res) => {
         res.send(note);
     }).catch(err => {
         if(err.kind === 'ObjectId') {
-            return res.status(404).send({
+            return res.status(500).send({
                 message: "Note not found with id " + req.params.noteId
             });
         }
