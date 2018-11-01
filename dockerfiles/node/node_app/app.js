@@ -18,6 +18,26 @@ const responseTime = require('response-time');
 const axios = require('axios');
 const redis = require('redis');
 
+// Logger - Winston
+
+const winston = require('winston');
+const logger = winston.createLogger({ 
+    transports: [
+        new (winston.transports.File)({
+            name: 'node-demo-app',
+            filename: 'node.log',
+            json: true,
+            level: 'info'
+        }),
+        new (winston.transports.File)({
+           name: 'node-demo-app',
+           filename: 'node-app-errors.log',
+           json: true,
+           level: 'error'
+        })
+    ]
+});
+
 
 //mongoose = restful.mongoose;
 
@@ -44,9 +64,19 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
 
 // Connecting to the database
 mongoose.connect('mongodb://demo-mongo:27017/Users', { useNewUrlParser: true }).then(() => {
-    console.log("Successfully connected to the database");
+   var mongoose_info = "Successfully connected to the database";
+    logger.log({
+      level: 'info',
+      message: mongoose_info
+        });
+    console.log(mongoose_info);
 }).catch(err => {
-    console.log('Could not connect to the database. Exiting now...', err);
+    var mongoose_error = 'Could not connect to the database. Exiting now...';
+     logger.log({
+       level: 'error',
+       message: mongoose_error + ' ' + err
+         });
+     console.log(mongoose_error);
     process.exit();
 });
 

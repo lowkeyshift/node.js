@@ -11,7 +11,7 @@ services:
     environment:
       - DD_API_KEY=48ff7da4fc067930996c42ba307d264d
       - DD_LOGS_ENABLED=true
-      - DD_APM_ANALYZED_SPANS=node-express|express.request=1
+      - DD_APM_ANALYZED_SPANS=node-express|express.request=1,node-express-mongodb|mongodb.query=1
       - DD_PROCESS_AGENT_ENABLED=true
       - DD_HOSTNAME=node-web-app
       - DD_LOG_LEVEL=trace
