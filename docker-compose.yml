@@ -9,7 +9,7 @@ services:
       - /proc/mounts:/host/proc/mounts:ro
       - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
     environment:
-      - DD_API_KEY=48ff7da4fc067930996c42ba307d264d
+      - DD_API_KEY=<api-key>
       - DD_LOGS_ENABLED=true
       - DD_APM_ANALYZED_SPANS=node-express|express.request=1,node-express-mongodb|mongodb.query=1
       - DD_PROCESS_AGENT_ENABLED=true
