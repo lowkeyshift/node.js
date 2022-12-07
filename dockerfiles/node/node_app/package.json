@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "client-sessions": "latest",
     "connect": "latest",
     "connect-flash": "latest",
@@ -20,7 +20,7 @@
     "dateformat": "latest",
     "dd-trace": "^0.6.0",
     "debug": "~2.2.0",
-    "express": "^4.16.3",
+    "express": "^4.18.2",
     "express-session": "^1.15.6",
     "method-override": "^3.0.0",
     "mongodb": "^3.1.6",
